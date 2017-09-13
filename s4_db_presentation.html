@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Eric Seymour, PhD">
+  <meta name="dcterms.date" content="2017-09-13">
+  <title>SQL and Databases for Research</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="reveal.js/css/reveal.css">
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; } /* Keyword */
+code > span.dt { color: #dfdfbf; } /* DataType */
+code > span.dv { color: #dcdccc; } /* DecVal */
+code > span.bn { color: #dca3a3; } /* BaseN */
+code > span.fl { color: #c0bed1; } /* Float */
+code > span.ch { color: #dca3a3; } /* Char */
+code > span.st { color: #cc9393; } /* String */
+code > span.co { color: #7f9f7f; } /* Comment */
+code > span.ot { color: #efef8f; } /* Other */
+code > span.al { color: #ffcfaf; } /* Alert */
+code > span.fu { color: #efef8f; } /* Function */
+code > span.er { color: #c3bf9f; } /* Error */
+code > span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+code > span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code > span.sc { color: #dca3a3; } /* SpecialChar */
+code > span.vs { color: #cc9393; } /* VerbatimString */
+code > span.ss { color: #cc9393; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { } /* Variable */
+code > span.cf { color: #f0dfaf; } /* ControlFlow */
+code > span.op { color: #f0efd0; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code > span.at { } /* Attribute */
+code > span.do { color: #7f9f7f; } /* Documentation */
+code > span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code > span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code > span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+  </style>
+  <link rel="stylesheet" href="reveal.js/css/theme/black.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? 'reveal.js/css/print/pdf.css' : 'reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script>
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section>
+  <h1 class="title">SQL and Databases for Research</h1>
+  <p class="author">Eric Seymour, PhD</p>
+  <p class="date">September 13, 2017</p>
+</section>
+
+<section class="slide level1">
+
+<h2 id="workshop-overview">Workshop Overview</h2>
+<ul>
+<li>Overview of databases (DBs)</li>
+<li>Overview of SQL syntax</li>
+<li>Overview of DB creation</li>
+<li>Spatial databases and spatial queries</li>
+<li>Interacting w/ (spatial) DBs using QGIS and Python</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="database-overview">Database Overview</h2>
+<ul>
+<li class="fragment">DBs good for storing and working with large datasets</li>
+<li class="fragment">DBs keep related data files in a single place</li>
+<li class="fragment">DBs let you link tables using common fields or spatial relationships</li>
+<li class="fragment">DBs enforce data integrity, e.g., only numbers in number column</li>
+<li class="fragment">SQL can be stored in text files (research reproducibility)</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="database-design">Database Design</h2>
+<ul>
+<li>DBs contain one or more tables</li>
+<li>Tables consist of columns (fields) and rows (observations)</li>
+<li>Columns have explicitly defined column types (text, int, real)</li>
+<li>Tables can be populated from text files (usually CSV files)</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="database-software">Database Software</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: left;">Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">MS Access</td>
+<td style="text-align: left;">File based</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SQLite</td>
+<td style="text-align: left;">File based</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MS SQL Server</td>
+<td style="text-align: left;">Server based</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MySQL (Oracle)</td>
+<td style="text-align: left;">Server based</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PostgreSQL</td>
+<td style="text-align: left;">Server based</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="slide level1">
+
+<h2 id="sqlite">SQLite</h2>
+<ul>
+<li>Does not require a server process</li>
+<li>No configuration required</li>
+<li>Self-contained, no external dependencies</li>
+<li>Works on all platforms</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="sqlite-usage">SQLite Usage</h2>
+<ul>
+<li>Command line interface (CLI) <a href="(https://sqlite.org/index.html)">sqlite3</a></li>
+<li><a href="https://addons.mozilla.org/en-US/firefox/addon/sqlite-manager/">Firefox SQLite Manager plugin</a></li>
+<li>Plugin needs to be installed for workshop</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="command-line-shell-program">Command Line Shell Program</h2>
+<ul>
+<li>Linux: <code>apt-get install sqlite3</code></li>
+<li>OSX: <code>brew install sqlite3</code></li>
+<li>Windows: download binaries; add sqlite to PATH
+<ul>
+<li>see <a href="https://www.codeproject.com/Articles/850834/Installing-and-Using-SQLite-on-Windows">here</a> for details</li>
+</ul></li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="creating-tables">Creating Tables</h2>
+<ul>
+<li>SQLite Manager simplifies table creation with wizard</li>
+<li>Table creation requires a CREATE TABLE statement using SQL</li>
+<li>These statements define the table name, field names, and field types</li>
+<li>Also identifies keys and constraints (optional)</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="simple-table-creation">Simple Table Creation</h2>
+<ul>
+<li>Open SQLite Manager</li>
+<li>Select Databse -&gt; New In-Memory Database</li>
+<li>Enter code in dialog box in 'Execute SQL' tab, hit RUN SQL</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">TABLE</span> cars (
+<span class="kw">id</span>      <span class="dt">INTEGER</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>, 
+make    TEXT,
+model   TEXT,
+price   <span class="dt">INTEGER</span>);</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="add-data">Add data</h2>
+<ul>
+<li>Remove CREATE code</li>
+<li>Copy statement below into dialog box, hit RUN SQL</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> cars <span class="kw">VALUES</span> (<span class="dv">1</span>, <span class="st">&#39;Acura&#39;</span>, <span class="st">&#39;NSX&#39;</span>, <span class="dv">47045</span>);
+<span class="kw">INSERT</span> <span class="kw">INTO</span> cars <span class="kw">VALUES</span> (<span class="dv">2</span>, <span class="st">&#39;Audi&#39;</span>, <span class="st">&#39;A8&#39;</span>, <span class="dv">63890</span>);
+<span class="kw">INSERT</span> <span class="kw">INTO</span> cars <span class="kw">VALUES</span> (<span class="dv">3</span>, <span class="st">&#39;BMW&#39;</span>, <span class="st">&#39;X1&#39;</span>, <span class="dv">108900</span>);</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="view-table">View Table</h2>
+<p>This query returns all columns and rows</p>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> *    <span class="co">/* &#39;*&#39; means ALL columns */</span>
+<span class="kw">FROM</span> cars;  </code></pre></div>
+</section>
+<section class="slide level1">
+
+<h3 id="sql-structured-query-language">SQL: Structured Query Language</h3>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> field1, field2   <span class="co">/* specify columns */</span>
+<span class="kw">FROM</span> myTable;           <span class="co">/* specify tables   */</span>
+<span class="kw">WHERE</span> condition = <span class="st">&#39;met&#39;</span>; <span class="co">/* filter (optional) */</span></code></pre></div>
+<ul>
+<li>SELECT and FROM are mandatory elements</li>
+<li>Many optional clauses, including WHERE</li>
+<li>Individual queries end with <code>;</code></li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="operators-in-where-clause">Operators in WHERE Clause</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Operator</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">=</td>
+<td style="text-align: left;">Equal</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">&lt;&gt;</td>
+<td style="text-align: left;">Not equal</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">&gt;(=)</td>
+<td style="text-align: left;">Greater than (or equal)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">&lt;(=)</td>
+<td style="text-align: left;">Less than (or equal)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="slide level1">
+
+<h2 id="where-clause-cont.">WHERE Clause, Cont.</h2>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Operator</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">BETWEEN</td>
+<td style="text-align: left;">Between an inclusive range</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">LIKE</td>
+<td style="text-align: left;">Search for a pattern</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">IN</td>
+<td style="text-align: left;">To specify multiple possible values for a colum</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section class="slide level1">
+
+<h2 id="sql-challenge">SQL Challenge</h2>
+<p>Find make, model, price for cars that cost 50,000 or more</p>
+<div class="fragment">
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> make, model, price
+<span class="kw">FROM</span> cars
+<span class="kw">WHERE</span> price &gt;= <span class="dv">50000</span>;</code></pre></div>
+</div>
+</section>
+<section class="slide level1">
+
+<h2 id="order-results">Order Results</h2>
+<ul>
+<li>Use ORDER clause to sort results by field(s)</li>
+<li>Default is ASC values; can also specify DESC</li>
+<li>Let's ORDER results of entire table by price</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> cars
+<span class="kw">ORDER</span> <span class="kw">BY</span> price <span class="kw">DESC</span>;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="sql-functions">SQL Functions</h2>
+<ul>
+<li>SQL can returns summary information</li>
+<li>MIN, MAX, COUNT, AVG, SUM</li>
+<li>You need to wrap the field in the function</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> <span class="fu">COUNT</span>(*), <span class="fu">AVG</span>(price), <span class="fu">MIN</span>(price), <span class="fu">MAX</span>(price)
+<span class="kw">FROM</span> cars;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="sql-functions-cont.">SQL Functions, cont.</h2>
+<ul>
+<li>Many string/text manipulation functions</li>
+<li>Let's find all cars whose manufacturer starts with 'A'</li>
+<li>Add SQL SUBSTR function to query</li>
+<li>Takes 2 arguments: position, length</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> cars
+<span class="kw">WHERE</span> <span class="fu">SUBSTR</span>(make,<span class="dv">1</span>,<span class="dv">1</span>) = <span class="st">&#39;A&#39;</span>
+<span class="kw">ORDER</span> <span class="kw">BY</span> make;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="like-function">LIKE Function</h2>
+<ul>
+<li>We could use LIKE for same purpose</li>
+<li>'%' is the wildcard character</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> *
+<span class="kw">FROM</span> cars
+<span class="kw">WHERE</span> make <span class="kw">LIKE</span> <span class="st">&#39;A%&#39;</span>
+<span class="kw">ORDER</span> <span class="kw">BY</span> make;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="sql-core-functions">SQL Core Functions</h2>
+<ul>
+<li>Many functions for operating on text and numbers</li>
+<li>Useful for cleaning data and customizing output</li>
+<li><a href="https://sqlite.org/lang_corefunc.html">Full list for SQLite core functions</a></li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="deleting-tables">Deleting Tables</h2>
+<p>Not Reversible</p>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">DROP</span> <span class="kw">TABLE</span> a_cars;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="tip-of-the-sql-database-iceberg">Tip of the SQL/ Database Iceberg</h2>
+<ul>
+<li>You now know how to create and query a database table</li>
+<li>Everything else builds on these fundamental ideas</li>
+<li>Are there questions before we move on?</li>
+</ul>
+</section>
+<section id="table-join" class="slide level1">
+<h1>Table Join</h1>
+</section>
+<section class="slide level1">
+
+<h2 id="adding-a-second-table">Adding a second table</h2>
+<p>Create new table of safety ratings for cars</p>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">CREATE</span> <span class="kw">TABLE</span> ratings (
+<span class="kw">id</span>      <span class="dt">INTEGER</span> <span class="kw">PRIMARY</span> <span class="kw">KEY</span>,
+make    TEXT,
+model   TEXT,
+rating  TEXT);</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="add-data-1">Add data</h2>
+<p>Cars have hypothetical A to F ratings</p>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">INSERT</span> <span class="kw">INTO</span> ratings <span class="kw">VALUES</span> (<span class="dv">1</span>, <span class="st">&#39;Acura&#39;</span>, <span class="st">&#39;NSX&#39;</span>, <span class="st">&#39;C&#39;</span>);
+<span class="kw">INSERT</span> <span class="kw">INTO</span> ratings <span class="kw">VALUES</span> (<span class="dv">2</span>, <span class="st">&#39;Audi&#39;</span>, <span class="st">&#39;A8&#39;</span>, <span class="st">&#39;A&#39;</span>);
+<span class="kw">INSERT</span> <span class="kw">INTO</span> ratings <span class="kw">VALUES</span> (<span class="dv">3</span>, <span class="st">&#39;BMW&#39;</span>, <span class="st">&#39;X1&#39;</span>, <span class="st">&#39;B&#39;</span>);</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="basic-table-joins">Basic Table Joins</h2>
+<ul>
+<li>Join tables on common field</li>
+<li>We have several fields in common in this case</li>
+<li>Join on id field in both tables</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> A.make, A.model, B.rating
+<span class="kw">FROM</span> cars <span class="kw">AS</span> A <span class="kw">JOIN</span> ratings <span class="kw">AS</span> B <span class="co">/* AS alias */</span>
+<span class="kw">ON</span> A.id = B.id; <span class="co">/* specify field to join on */</span></code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="types-of-joins-in-sqlite">Types of Joins in SQLite</h2>
+<ul>
+<li>Inner Join (Default)</li>
+</ul>
+<p>Returns all rows from multiple tables where the join condition is met</p>
+<div class="fragment">
+<ul>
+<li>LEFT OUTER JOIN</li>
+</ul>
+<p>Returns <strong>all</strong> rows from the LEFT-hand table specified in the ON condition and only those rows from the other table where the joined fields are equal</p>
+</div>
+</section>
+<section class="slide level1">
+
+<figure>
+<img src="figures/inner_join.png" alt="Inner Join" /><figcaption>Inner Join</figcaption>
+</figure>
+</section>
+<section class="slide level1">
+
+<figure>
+<img src="figures/outer_join.png" alt="Left Outer Join" /><figcaption>Left Outer Join</figcaption>
+</figure>
+</section>
+<section class="slide level1">
+
+<h2 id="loading-csv-files">Loading CSV Files</h2>
+<ul>
+<li>Read CSV files in using command line interface</li>
+<li>Program defaults data to TEXT</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">sqlite</span><span class="op">&gt;</span> .mode csv
+<span class="ex">sqlite</span><span class="op">&gt;</span> .import ACS_15_5YR_B25003.csv wayne_tenure
+<span class="ex">sqlite</span><span class="op">&gt;</span> SELECT COUNT(*) <span class="ex">FROM</span> wayne_tenure<span class="kw">;</span>
+<span class="ex">611</span></code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="read-csv-files-using-python">Read CSV files using Python</h2>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> sqlite3 <span class="im">as</span> sql
+<span class="im">import</span> csv
+
+con <span class="op">=</span> sql.<span class="ex">connect</span>(<span class="st">&quot;:memory:&quot;</span>)
+cur <span class="op">=</span> con.cursor()
+cur.execute(<span class="st">&#39;&#39;&#39;</span>
+<span class="st">    CREATE TABLE wayne_tenure (</span>
+<span class="st">    geoid TEXT,</span>
+<span class="st">    geoid2 TEXT,</span>
+<span class="st">    geoid_label TEXT,</span>
+<span class="st">    HD01_VD01 INT </span>
+<span class="st">    HD02_VD01 INT</span>
+<span class="st">    HD01_VD02 INT</span>
+<span class="st">    HD02_VD02 INT</span>
+<span class="st">    HD01_VD03 INT</span>
+<span class="st">    HD02_VD03 INT</span>
+<span class="st">    );</span>
+<span class="st">    &#39;&#39;&#39;</span>)
+
+<span class="cf">with</span> <span class="bu">open</span>(<span class="st">&quot;ACS_15_5YR_B25003.csv&quot;</span>, <span class="st">&quot;r&quot;</span>) <span class="im">as</span> f:
+    reader <span class="op">=</span> csv.reader()
+    header <span class="op">=</span> reader.<span class="bu">next</span>()
+    <span class="cf">for</span> row <span class="kw">in</span> reader:
+        cur.execute(<span class="st">&#39;&#39;&#39;</span>
+<span class="st">            INSERT INTO wayne_tenure</span>
+<span class="st">            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);</span>
+<span class="st">            &#39;&#39;&#39;</span>, row)
+
+con.commit()
+con.close()</code></pre></div>
+</section>
+<section id="spatial-databases" class="slide level1">
+<h1>Spatial Databases</h1>
+</section>
+<section class="slide level1">
+
+<h2 id="spatial-databases-1">Spatial Databases</h2>
+<ul>
+<li>We can use coordinate/geometry data to make spatial tables</li>
+<li>SQLite -&gt; Spatialite</li>
+<li>Special spatial SQL syntax for querying for relationships based on location</li>
+<li>QGIS makes it easy to create and work w/ Spatialite DBs</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="tips">Tips</h2>
+<ul>
+<li>Begin project with spatial table to initialize spatial components of DB</li>
+<li>Then add spatial and non-spatial tables in any order</li>
+<li>Use CLI or GUI to generate DB from initial spatial layer</li>
+<li>Export shp to new spatialite DB via QGIS export</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="spatialite-tools">Spatialite Tools</h2>
+<ul>
+<li>Command line tool for reading shapefiles into spatial DB table</li>
+<li>NB: This tool is inferior to others</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">spatialite_tool</span> -i -shp tl_2010_26163_tract10 <span class="dt">\\</span>
+<span class="ex">-d</span> test.sqlite -t wayne_tracts <span class="dt">\\</span>
+<span class="ex">-c</span> CP1252 -s 2898</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="ogr2ogr">ogr2ogr</h2>
+<p>CLI installed with GDAL: <code>apt-get install gdal-bin</code></p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">ogr2ogr</span> -f <span class="st">&#39;SQLite&#39;</span> -dsco SPATIALITE=YES -t_srs EPSG:2898 <span class="dt">\\</span>
+<span class="ex">test.sqlite</span> tl_2010_26_place10.shp -nln mi_places -nlt PROMOTE_TO_MULTI</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">ogr2ogr</span> -f <span class="st">&#39;SQLite&#39;</span> -update -t_srs EPSG:2898 <span class="dt">\\</span>
+<span class="ex">test.sqlite</span> tl_2010_26163_tract10.shp -nln wayne_tracts -nlt PROMOTE_TO_MULTI</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="tenure-heat-map">Tenure Heat Map</h2>
+<ul>
+<li class="fragment">Run python script to add tenure data to test.sqlite</li>
+<li class="fragment">Open QGIS DB Manager</li>
+<li class="fragment">JOIN tenure data to tract geos</li>
+<li class="fragment">Create choropleth map</li>
+</ul>
+</section>
+<section class="slide level1">
+
+<ul>
+<li>Join on fields containing full tract FIPS</li>
+<li>Select calculated field AND geometry</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> A.geoid2, 
+A.HD01_VD02 * <span class="fl">1.0</span> / A.HD01_VD01 * <span class="dv">100</span> <span class="kw">AS</span> own_rate,
+B.geometry
+<span class="kw">FROM</span> wayne_tenure <span class="kw">AS</span> A <span class="kw">JOIN</span> wayne_tracts <span class="kw">AS</span> B
+<span class="kw">ON</span> A.geoid2 = B.GEOID10;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="spatial-sql-functions">Spatial SQL Functions</h2>
+<ul>
+<li>Spatialite implements a subset of PostGIS functions</li>
+<li>Functions correspond to many vector tools in ArcGIS</li>
+<li>Many begin with &quot;ST&quot; for &quot;space-time&quot;</li>
+<li><a href="https://www.gaia-gis.it/gaia-sins/spatialite-sql-4.3.0.html#p1">Full list</a></li>
+</ul>
+</section>
+<section class="slide level1">
+
+<h2 id="find-tract-centroids">Find Tract Centroids</h2>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> A.geoid2, 
+A.HD01_VD02 * <span class="fl">1.0</span> / A.HD01_VD01 * <span class="dv">100</span> <span class="kw">AS</span> own_rate,
+st_centroid(B.geometry) <span class="co">/* wrap geom in centroid function */</span>
+<span class="kw">FROM</span> wayne_tenure <span class="kw">AS</span> A <span class="kw">JOIN</span> wayne_tracts <span class="kw">AS</span> B
+<span class="kw">ON</span> A.geoid2 = B.GEOID10;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="buffer-centroids">Buffer Centroids</h2>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> A.geoid2, 
+A.HD01_VD02 * <span class="fl">1.0</span> / A.HD01_VD01 * <span class="dv">100</span> <span class="kw">AS</span> own_rate,
+st_buffer(st_centroid(B.geometry), <span class="dv">1000</span>) <span class="co">/* dist in CRS units (ft) */</span>
+<span class="kw">FROM</span> wayne_tenure <span class="kw">AS</span> A <span class="kw">JOIN</span> wayne_tracts <span class="kw">AS</span> B
+<span class="kw">ON</span> A.geoid2 = B.GEOID10;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="spatial-queries">Spatial Queries</h2>
+<ul>
+<li>Find all tracts in Detroit</li>
+<li>Add census places layer</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">spatialite_tool</span> -i -shp tl_2010_26_place10 <span class="dt">\\</span>
+<span class="ex">-d</span> test.sqlite -t mi_tracts <span class="dt">\\</span>
+<span class="ex">-c</span> CP1252 -s 2898</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="spatial-queries-1">Spatial Queries</h2>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> A.*
+<span class="kw">from</span> wayne_tracts <span class="kw">AS</span> A, mi_places <span class="kw">AS</span> B
+<span class="kw">WHERE</span> st_contains(B.geometry, A.geometry)
+<span class="kw">AND</span> B.placefp10 = <span class="st">&#39;22000&#39;</span>;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="spatial-index">Spatial Index</h2>
+<ul>
+<li>Speed performance</li>
+<li>Require explicit inclusion in query</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> A.*
+<span class="kw">from</span> wayne_tracts <span class="kw">AS</span> A, mi_places <span class="kw">AS</span> B
+<span class="kw">WHERE</span> st_contains(B.geometry, A.geometry)
+<span class="kw">AND</span> A.ROWID <span class="kw">IN</span> (<span class="kw">SELECT</span> <span class="dt">ROWID</span>
+<span class="kw">FROM</span> SpatialIndex <span class="kw">WHERE</span> f_table_name=<span class="st">&#39;wayne_tracts&#39;</span>
+<span class="kw">AND</span> search_frame=B.geometry)
+<span class="kw">AND</span> B.placefp10 = <span class="st">&#39;22000&#39;</span>
+;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="spatial-index-1">Spatial Index</h2>
+<ul>
+<li>Speeds performance</li>
+<li>Requires explicit inclusion in query</li>
+<li>Expand city boundary and search for tract centroids</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> A.*
+<span class="kw">from</span> wayne_tracts <span class="kw">AS</span> A, mi_places <span class="kw">AS</span> B
+<span class="kw">WHERE</span> st_contains(st_buffer(B.geometry, <span class="dv">500</span>), st_centroid(A.geometry))
+<span class="kw">AND</span> A.ROWID <span class="kw">IN</span> (<span class="kw">SELECT</span> <span class="dt">ROWID</span>
+    <span class="kw">FROM</span> SpatialIndex <span class="kw">WHERE</span> f_table_name=<span class="st">&#39;wayne_tracts&#39;</span>
+    <span class="kw">AND</span> search_frame=B.geometry)
+<span class="kw">AND</span> B.placefp10 = <span class="st">&#39;22000&#39;</span>;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="detroit-homeownership">Detroit Homeownership</h2>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">select</span> A.*,
+C.HD01_VD02 * <span class="fl">1.0</span> / C.HD01_VD01 * <span class="dv">100</span> <span class="kw">AS</span> own_rate
+<span class="kw">from</span> wayne_tracts <span class="kw">AS</span> A, mi_places <span class="kw">AS</span> B
+<span class="kw">JOIN</span> wayne_tenure <span class="kw">AS</span> C <span class="kw">ON</span> C.geoid2 = A.GEOID10
+<span class="kw">WHERE</span> st_contains(st_buffer(B.geometry, <span class="dv">500</span>), st_centroid(A.geometry))
+<span class="kw">AND</span> A.ROWID <span class="kw">IN</span> (<span class="kw">SELECT</span> <span class="dt">ROWID</span>
+    <span class="kw">FROM</span> SpatialIndex <span class="kw">WHERE</span> f_table_name=<span class="st">&#39;wayne_tracts&#39;</span>
+    <span class="kw">AND</span> search_frame=B.geometry)
+<span class="kw">AND</span> B.placefp10 = <span class="st">&#39;22000&#39;</span>;</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="making-geometries-from-coordinates">Making geometries from coordinates</h2>
+<ul>
+<li>Assumes presence of fields name &quot;LATITUDE&quot; and &quot;LONGITUDE&quot;</li>
+<li>Assumes data were generated using NAD83 (EPSG:2898)</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">AddGeometryColumn</span>(<span class="st">&#39;table&#39;</span>, <span class="st">&#39;geometry&#39;</span>, 4269, <span class="st">&#39;POINT&#39;</span>, <span class="st">&#39;XY&#39;</span>);
+<span class="ex">UPDATE</span> table SET geometry=MakePoint(LONGITUDE,LATITUDE,4269);
+<span class="ex">SELECT</span> CreateSpatialIndex(<span class="st">&#39;table&#39;</span>, <span class="st">&#39;geometry&#39;</span>);</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="transform-srs">Transform SRS</h2>
+<ul>
+<li>Project to US Albers Equal Area Conic</li>
+<li>ESRI:102003</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="ex">AddGeometryColumn</span>(<span class="st">&#39;table&#39;</span>, <span class="st">&#39;geometry&#39;</span>, 102003, <span class="st">&#39;POINT&#39;</span>, <span class="st">&#39;XY&#39;</span>);
+<span class="ex">UPDATE</span> table SET geometry=ST_Transform(MakePoint(LONGITUDE,LATITUDE,4269), <span class="ex">102003</span>);
+<span class="ex">SELECT</span> CreateSpatialIndex(<span class="st">&#39;table&#39;</span>, <span class="st">&#39;geometry&#39;</span>);</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="spatialite-python">Spatialite &amp; Python</h2>
+<ul>
+<li>Use <code>pysqlite</code> module</li>
+<li><code>conda install -c kbchoi pysqlite</code></li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">from</span> pysqlite2 <span class="im">import</span> dbapi2 <span class="im">as</span> sql
+
+con <span class="op">=</span> sql.<span class="ex">connect</span>(<span class="st">&quot;test.sqlite&quot;</span>)
+con.enable_load_extension(<span class="va">True</span>)
+con.execute(<span class="st">&quot;SELECT load_extension(&#39;mod_spatialite&#39;);&quot;</span>)</code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="use-case">Use Case</h2>
+<pre><code>For every city w/ pop. loss:
+    - Select tracts where centroid within city
+    - Calculate summary measures of loss
+    - Pct of tracts that lost pop, etc.
+    - Collect measures for each city for comparison </code></pre>
+</section>
+<section class="slide level1">
+
+<h2 id="sql-for-single-case">SQL for single case</h2>
+<div class="sourceCode"><pre class="sourceCode sql"><code class="sourceCode sql"><span class="kw">SELECT</span> C.geoid10, 
+D.POP10, 
+D.POP00,
+C.aland10,
+Hex(ST_AsBinary(C.geometry)) <span class="kw">AS</span> geometry <span class="co">/*convert to geopandas friendly format*/</span>
+<span class="kw">FROM</span> CenPop2010_Mean_TR <span class="kw">AS</span> A, us_place_2010 <span class="kw">AS</span> B 
+<span class="kw">JOIN</span> tl_tracts_10 <span class="kw">AS</span> C <span class="kw">ON</span> A.tractlong = C.geoid10 <span class="co">/*join centroids to tract polys*/</span>
+<span class="kw">JOIN</span> tract_00_10 <span class="kw">AS</span> D <span class="kw">ON</span> C.geoid10 = D.GEOID 
+<span class="kw">WHERE</span> ST_Contains(B.geometry, A.geometry) <span class="co">/* find pop. weighted centroids contained by city */</span>
+<span class="kw">AND</span> A.ROWID <span class="kw">IN</span> (
+    <span class="kw">SELECT</span> <span class="dt">ROWID</span> <span class="kw">FROM</span> SpatialIndex
+    <span class="kw">WHERE</span> f_table_name=<span class="st">&#39;CenPop2010_Mean_TR&#39;</span> <span class="kw">AND</span> search_frame=B.geometry)
+<span class="kw">AND</span> B.geoid10 = <span class="st">&#39;2965000&#39;</span>   <span class="co">/*city being iterated over*/</span>
+<span class="kw">AND</span> D.POP00 &gt;= <span class="dv">1</span>;       <span class="co">/*omit tracts without pop*/</span></code></pre></div>
+</section>
+<section class="slide level1">
+
+<h2 id="geopandas-for-analysis">Geopandas for analysis</h2>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">df <span class="op">=</span> gpd.GeoDataFrame.from_postgis(qry, con, geom_col<span class="op">=</span><span class="st">&#39;geometry&#39;</span>, index_col<span class="op">=</span><span class="st">&#39;geoid10&#39;</span>)
+
+<span class="co"># calculate city-level loss</span>
+city_loss <span class="op">=</span> ( df[<span class="st">&#39;POP10&#39;</span>].<span class="bu">sum</span>() <span class="op">-</span> df[<span class="st">&#39;POP00&#39;</span>].<span class="bu">sum</span>() ) <span class="op">*</span> <span class="fl">1.0</span> <span class="op">/</span> df[<span class="st">&#39;POP00&#39;</span>].<span class="bu">sum</span>() <span class="op">*</span> <span class="dv">100</span>
+cities_dict[k][<span class="st">&#39;city_loss&#39;</span>] <span class="op">=</span> city_loss
+
+<span class="co"># calculate pct change 2000 to 2010</span>
+df[<span class="st">&#39;ppchg_00-10&#39;</span>] <span class="op">=</span> ( df[<span class="st">&#39;POP10&#39;</span>] <span class="op">-</span> df[<span class="st">&#39;POP00&#39;</span>] ) <span class="op">*</span> <span class="fl">1.0</span> <span class="op">/</span> df[<span class="st">&#39;POP00&#39;</span>] <span class="op">*</span> <span class="dv">100</span>
+
+<span class="co"># calculate pct of tracts that lost pop btw 2000 and 2010</span>
+extensiveness <span class="op">=</span> <span class="bu">len</span>(df.loc[df[<span class="st">&#39;ppchg_00-10&#39;</span>] <span class="op">&lt;=</span> <span class="op">-</span><span class="dv">5</span>]) <span class="op">*</span> <span class="fl">1.0</span> <span class="op">/</span> <span class="bu">len</span>(df) <span class="op">*</span> <span class="dv">100</span>
+cities_dict[k][<span class="st">&#39;extensiveness_loss&#39;</span>] <span class="op">=</span> extensiveness</code></pre></div>
+</section>
+<section class="slide level1">
+
+</section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true },
+              { src: 'reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    </body>
+</html>
